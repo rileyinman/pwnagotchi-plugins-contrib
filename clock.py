@@ -43,6 +43,10 @@ class PwnClock(plugins.Plugin):
                                                  position=pos,
                                                  label_font=fonts.Small, text_font=fonts.Small))
 
+    def on_unload(self, ui):
+        with ui._lock:
+            ui.remove_element('clock')
+
     def on_ui_update(self, ui):
         now = datetime.datetime.now()
         time_rn = now.strftime(self.date_format + "\n" + self.time_format)

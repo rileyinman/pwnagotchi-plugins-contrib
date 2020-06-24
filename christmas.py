@@ -34,6 +34,10 @@ class Christmas(plugins.Plugin):
                                                      position=pos,
                                                      label_font=fonts.Small, text_font=fonts.Small))
 
+    def on_unload(self, ui):
+        with ui._lock:
+            ui.remove_element('christmas')
+
     def on_ui_update(self, ui):
         now = datetime.datetime.now()
         christmas = datetime.datetime(now.year, 12, 25)
