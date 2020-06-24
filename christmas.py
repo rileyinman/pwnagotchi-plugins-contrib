@@ -6,7 +6,6 @@ import pwnagotchi
 import logging
 import datetime
 import math
-import yaml
 
 
 class Christmas(plugins.Plugin):
@@ -16,21 +15,22 @@ class Christmas(plugins.Plugin):
     __description__ = 'Christmas Countdown timer for pwnagotchi'
 
     def on_loaded(self):
-        logging.info("Christmas Plugin loaded.")
+        logging.info("[christmas] Plugin loaded.")
+
+    def on_config_changed(self, config):
+        self.config = config
+
+    def on_ready(self, agent)
+        self.config = agent.config()
 
     def on_ui_setup(self, ui):
         memenable = False
-        with open('/etc/pwnagotchi/config.yml') as f:
-            data = yaml.load(f, Loader=yaml.FullLoader)
-
-            if 'memtemp' in data["main"]["plugins"]:
-                if 'enabled' in data["main"]["plugins"]["memtemp"]:
-                    if data["main"]["plugins"]["memtemp"]["enabled"]:
-                        memenable = True
-                        logging.info("Christmas Plugin: memtemp is enabled")
+        if self.config['main']['plugins']['memtemp']['enabled'] is True:
+            memenable = True
+            logging.info("[christmas] Memtemp is enabled.")
         if ui.is_waveshare_v2():
             pos = (130, 80) if memenable else (200, 80)
-            ui.add_element('christmas', LabeledValue(color=BLACK, label='', value='christmas\n',
+            ui.add_element('christmas', LabeledValue(color=BLACK, label='', value='Christmas\n',
                                                      position=pos,
                                                      label_font=fonts.Small, text_font=fonts.Small))
 
@@ -47,8 +47,8 @@ class Christmas(plugins.Plugin):
         minutes = (difference.seconds % 3600) // 60
 
         if now.month == 12 and now.day == 25:
-            ui.set('christmas', "merry\nchristmas!")
+            ui.set('christmas', "Merry\nChristmas!")
         elif days == 0:
-            ui.set('christmas', "christmas\n%dH %dM" % (hours, minutes))
+            ui.set('christmas', "Christmas\n%dH %dM" % (hours, minutes))
         else:
-            ui.set('christmas', "christmas\n%dD %dH" % (days, hours))
+            ui.set('christmas', "Christmas\n%dD %dH" % (days, hours))
