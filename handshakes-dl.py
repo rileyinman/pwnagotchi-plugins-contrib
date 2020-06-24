@@ -78,7 +78,7 @@ class HandshakesDL(plugins.Plugin):
         self.ready = False
 
     def on_loaded(self):
-        logging.info("[HandshakesDL] plugin loaded")
+        logging.info("[handshakes-dl] Plugin loaded.")
 
     def on_config_changed(self, config):
         self.config = config
@@ -95,7 +95,7 @@ class HandshakesDL(plugins.Plugin):
                                     title="Handshakes | " + pwnagotchi.name(),
                                     handshakes=handshakes)    
         elif path == "all":
-            logging.info(f"[HandshakesDL] creating Zip-File in memory")
+            logging.info("[handshakes-dl] Creating Zip-File in memory.")
             memory_file = BytesIO()
             with zipfile.ZipFile(memory_file, 'w') as zf:
                 files = glob.glob(os.path.join(self.config['bettercap']['handshakes'], "*.pcap"))
@@ -103,15 +103,15 @@ class HandshakesDL(plugins.Plugin):
                     for individualFile in files:
                         zf.write(individualFile)
                 except Exception as e:
-                    logging.error(f"[HandshakesDL] {e}")
+                    logging.error(f"[handshakes-dl] {e}")
                     abort(404)
             memory_file.seek(0)
-            logging.info(f"[HandshakesDL] serving handshakes.zip")
+            logging.info(f"[handshakes-dl] Serving handshakes.zip")
             return send_file(memory_file, attachment_filename='handshakes.zip', as_attachment=True)
         else:
             dir = self.config['bettercap']['handshakes']
             try:
-                logging.info(f"[HandshakesDL] serving {dir}/{path}.pcap")
+                logging.info(f"[handshakes-dl] Serving {dir}/{path}.pcap")
                 return send_from_directory(directory=dir, filename=path+'.pcap', as_attachment=True)
             except FileNotFoundError:
                 abort(404)
