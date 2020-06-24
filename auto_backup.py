@@ -14,16 +14,16 @@ class AutoBackup(plugins.Plugin):
     def __init__(self):
         self.ready = False
         self.tries = 0
-        self.status = StatusFile('/root/.auto-backup')
+        self.status = StatusFile('/root/.auto_backup')
 
     def on_loaded(self):
         for opt in ['files', 'interval', 'commands', 'max_tries']:
             if opt not in self.options or (opt in self.options and self.options[opt] is None):
-                logging.error(f"AUTO-BACKUP: Option {opt} is not set.")
+                logging.error(f"[auto_backup] Option {opt} is not set.")
                 return
 
         self.ready = True
-        logging.info("AUTO-BACKUP: Successfully loaded.")
+        logging.info("[auto_backup] Successfully loaded.")
 
     def on_internet_available(self, agent):
         if not self.ready:
@@ -42,24 +42,24 @@ class AutoBackup(plugins.Plugin):
         try:
             display = agent.view()
 
-            logging.info("AUTO_BACKUP: Backing up ...")
+            logging.info("[auto_backup] Backing up ...")
             display.set('status', 'Backing up ...')
             display.update()
 
             for cmd in self.options['commands']:
-                logging.info(f"AUTO_BACKUP: Running {cmd.format(files=files_to_backup)}")
+                logging.info(f"[auto_backup] Running {cmd.format(files=files_to_backup)}")
                 process = subprocess.Popen(cmd.format(files=files_to_backup), shell=True, stdin=None,
                                            stdout=open("/dev/null", "w"), stderr=None, executable="/bin/bash")
                 process.wait()
                 if process.returncode > 0:
                     raise OSError(f"Command failed (rc: {process.returncode})")
 
-            logging.info("AUTO_BACKUP: backup done")
+            logging.info("[auto_backup] Backup done.")
             display.set('status', 'Backup done!')
             display.update()
             self.status.update()
         except OSError as os_e:
             self.tries += 1
-            logging.info(f"AUTO_BACKUP: Error: {os_e}")
+            logging.info(f"[auto_backup] Error: {os_e}")
             display.set('status', 'Backup failed!')
             display.update()
