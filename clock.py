@@ -5,7 +5,6 @@ import pwnagotchi.plugins as plugins
 import pwnagotchi
 import logging
 import datetime
-import yaml
 
 
 class PwnClock(plugins.Plugin):
@@ -20,26 +19,31 @@ class PwnClock(plugins.Plugin):
         else:
             self.date_format = "%m/%d/%y"
 
-        logging.info("Pwnagotchi Clock Plugin loaded.")
+        if 'time_format' in self.options:
+            self.time_format = self.options['time_format']
+        else:
+            self.time_format = "%I:%M %p"
+
+        logging.info("[clock] Plugin loaded.")
+
+    def on_config_changed(self, config):
+        self.config = config
+
+    def on_ready(self, agent):
+        self.config = agent.config()
 
     def on_ui_setup(self, ui):
         memenable = False
-        with open('/etc/pwnagotchi/config.yml') as f:
-            data = yaml.load(f, Loader=yaml.FullLoader)
-
-            if 'memtemp' in data["main"]["plugins"]:
-                if 'enabled' in data["main"]["plugins"]["memtemp"]:
-                    if data["main"]["plugins"]["memtemp"]["enabled"]:
-                        memenable = True
-                        logging.info(
-                            "Pwnagotchi Clock Plugin: memtemp is enabled")
+        if self.config['main']['plugins']['memtemp']['enabled'] is True:
+            memenable = True
+            logging.info("[clock] Memtemp is enabled.")
         if ui.is_waveshare_v2():
-            pos = (130, 80) if memenable else (200, 80)
+            pos = (110, 80) if memenable else (200, 80)
             ui.add_element('clock', LabeledValue(color=BLACK, label='', value='-/-/-\n-:--',
                                                  position=pos,
                                                  label_font=fonts.Small, text_font=fonts.Small))
 
     def on_ui_update(self, ui):
         now = datetime.datetime.now()
-        time_rn = now.strftime(self.date_format + "\n%I:%M %p")
+        time_rn = now.strftime(self.date_format + "\n" + self.time_format)
         ui.set('clock', time_rn)
