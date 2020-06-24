@@ -10,7 +10,7 @@ class Telegram(plugins.Plugin):
     __description__ = 'Periodically sent messages to Telegram about the recent activity of pwnagotchi'
 
     def on_loaded(self):
-        logging.info("telegram plugin loaded.")
+        logging.info("[telegram] Plugin loaded.")
 
     # called when there's available internet
     def on_internet_available(self, agent):
@@ -23,10 +23,10 @@ class Telegram(plugins.Plugin):
             try:
                 import telegram
             except ImportError:
-                logging.error("Couldn't import telegram")
+                logging.error("[telegram] Couldn't import python library.")
                 return
 
-            logging.info("Detected new activity and internet, time to send a message!")
+            logging.info("[telegram] Detected new activity and internet, time to send a message!")
 
             picture = '/root/pwnagotchi.png'
             display.on_manual_mode(last_session)
@@ -34,20 +34,20 @@ class Telegram(plugins.Plugin):
             display.update(force=True)
 
             try:
-                logging.info("Connecting to Telegram...")
+                logging.info("[telegram] Connecting to Telegram...")
 
                 message = Voice(lang=config['main']['lang']).on_last_session_tweet(last_session)
 
                 bot = telegram.Bot(self.options['bot_token'])
                 if self.options['send_picture'] is True:
                     bot.sendPhoto(chat_id=self.options['chat_id'], photo=open(picture, 'rb'))
-                    logging.info("telegram: picture sent")
+                    logging.info("[telegram] Picture sent.")
                 if self.options['send_message'] is True:
                     bot.sendMessage(chat_id=self.options['chat_id'], text=message, disable_web_page_preview=True)
-                    logging.info("telegram: message sent: %s" % message)
+                    logging.info("[telegram] Message sent: %s" % message)
 
                 last_session.save_session_id()
                 display.set('status', 'Telegram notification sent!')
                 display.update(force=True)
-            except Exception:
-                logging.exception("Error while sending on Telegram")
+            except Exception as e:
+                logging.exception(f"[telegram] Error while sending on Telegram: {e}.")
