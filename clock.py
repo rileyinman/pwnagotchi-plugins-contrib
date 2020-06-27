@@ -38,7 +38,7 @@ class PwnClock(plugins.Plugin):
             memenable = True
             logging.info("[clock] Memtemp is enabled.")
         if ui.is_waveshare_v2():
-            pos = (110, 80) if memenable else (200, 80)
+            pos = (120, 80) if memenable else (200, 80)
             ui.add_element('clock', LabeledValue(color=BLACK, label='', value='-/-/-\n-:--',
                                                  position=pos,
                                                  label_font=fonts.Small, text_font=fonts.Small))
