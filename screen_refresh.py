@@ -10,12 +10,12 @@ class ScreenRefresh(plugins.Plugin):
 
     def __init__(self):
         self.update_count = 0;
+
+    def on_loaded(self):
         if 'refresh_interval' in self.options:
             self.refresh_interval = self.options['refresh_interval']
         else:
             self.refresh_interval = 50
-
-    def on_loaded(self):
         logging.info("Screen refresh plugin loaded")
 
     def on_ui_update(self, ui):
