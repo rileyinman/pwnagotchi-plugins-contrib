@@ -1,13 +1,15 @@
-import logging
-import RPi.GPIO as GPIO
-import subprocess
-import pwnagotchi.plugins as plugins
-import signal
-import smbus
-import time
-from threading import Thread
 import atexit
 from colorsys import hsv_to_rgb
+import logging
+import signal
+import subprocess
+from threading import Thread
+import time
+
+import smbus
+import RPi.GPIO as GPIO
+
+import pwnagotchi.plugins as plugins
 
 
 try:
@@ -110,7 +112,7 @@ class Handler():
         self.hold_fired = False
         self.plugin = plugin
 
-_handlers = [None,None,None,None,None]
+_handlers = [None, None, None, None, None]
 
 
 def _run():
@@ -428,27 +430,27 @@ def runCommand(button, pressed, plugin):
     bCfg = plugin.options['buttons'][NAMES[button]]
     blinkCfg = bCfg['blink']
     logging.debug(blink)
-    if blinkCfg['enabled'] == True:
-        logging.debug(f"[buttonshim] Blinking led")
+    if blinkCfg['enabled']:
+        logging.debug(f"[buttonshim] Blinking led.")
         red = int(blinkCfg['red'])
         green = int(blinkCfg['green'])
         blue = int(blinkCfg['blue'])
         on_time = float(blinkCfg['on_time'])
         off_time = float(blinkCfg['off_time'])
-        blink_times =  int(blinkCfg['blink_times'])
+        blink_times = int(blinkCfg['blink_times'])
         logging.debug(f"red {red} green {green} blue {blue} on_time {on_time} off_time {off_time} blink_times {blink_times}")
         thread = Thread(target=blink, args=(red, green, blue, on_time, off_time, blink_times))
         thread.start()
-        logging.debug(f"[buttonshim] Blink thread started")
+        logging.debug(f"[buttonshim] Blink thread started.")
     command = bCfg['command']
     if command == '':
-        logging.debug(f"[buttonshim] Command empty")
+        logging.debug(f"[buttonshim] Command empty.")
     else:
         logging.debug(f"[buttonshim] Process create: {command}")
         process = subprocess.Popen(command, shell=True, stdin=None, stdout=open("/dev/null", "w"), stderr=None, executable="/bin/bash")
         process.wait()
         process = None
-        logging.debug(f"[buttonshim] Process end")
+        logging.debug(f"[buttonshim] Process end.")
 
 class Buttonshim(plugins.Plugin):
     __author__ = 'gon@o2online.de'

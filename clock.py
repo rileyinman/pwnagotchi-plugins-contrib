@@ -1,10 +1,10 @@
+import logging
+import datetime
+
 from pwnagotchi.ui.components import LabeledValue
 from pwnagotchi.ui.view import BLACK
 import pwnagotchi.ui.fonts as fonts
 import pwnagotchi.plugins as plugins
-import pwnagotchi
-import logging
-import datetime
 
 
 class PwnClock(plugins.Plugin):
@@ -49,5 +49,5 @@ class PwnClock(plugins.Plugin):
 
     def on_ui_update(self, ui):
         now = datetime.datetime.now()
-        time_rn = now.strftime(self.date_format + "\n" + self.time_format)
+        time_rn = now.strftime(f"{self.date_format}\n{self.time_format}")
         ui.set('clock', time_rn)

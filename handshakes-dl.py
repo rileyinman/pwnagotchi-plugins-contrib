@@ -1,16 +1,15 @@
-import logging
-import json
-import os
 import glob
-import zipfile
 from io import BytesIO
-
-import pwnagotchi
-import pwnagotchi.plugins as plugins
+import logging
+import os
+import zipfile
 
 from flask import abort
 from flask import send_from_directory, send_file
 from flask import render_template_string
+
+import pwnagotchi
+import pwnagotchi.plugins as plugins
 
 TEMPLATE = """
 {% extends "base.html" %}
@@ -92,9 +91,9 @@ class HandshakesDL(plugins.Plugin):
             handshakes = glob.glob(os.path.join(self.config['bettercap']['handshakes'], "*.pcap"))
             handshakes = [os.path.basename(path)[:-5] for path in handshakes]
             return render_template_string(TEMPLATE,
-                                    title="Handshakes | " + pwnagotchi.name(),
-                                    handshakes=handshakes)    
-        elif path == "all":
+                                          title=f"Handshakes | {pwnagotchi.name()}",
+                                          handshakes=handshakes)
+        if path == "all":
             logging.info("[handshakes-dl] Creating Zip-File in memory.")
             memory_file = BytesIO()
             with zipfile.ZipFile(memory_file, 'w') as zf:
@@ -108,10 +107,10 @@ class HandshakesDL(plugins.Plugin):
             memory_file.seek(0)
             logging.info(f"[handshakes-dl] Serving handshakes.zip")
             return send_file(memory_file, attachment_filename='handshakes.zip', as_attachment=True)
-        else:
-            dir = self.config['bettercap']['handshakes']
-            try:
-                logging.info(f"[handshakes-dl] Serving {dir}/{path}.pcap")
-                return send_from_directory(directory=dir, filename=path+'.pcap', as_attachment=True)
-            except FileNotFoundError:
-                abort(404)
+
+        dir = self.config['bettercap']['handshakes']
+        try:
+            logging.info(f"[handshakes-dl] Serving {dir}/{path}.pcap")
+            return send_from_directory(directory=dir, filename=path+'.pcap', as_attachment=True)
+        except FileNotFoundError:
+            abort(404)

@@ -1,8 +1,9 @@
-import pwnagotchi.plugins as plugins
-from pwnagotchi.utils import StatusFile
 import logging
 import os
 import subprocess
+
+import pwnagotchi.plugins as plugins
+from pwnagotchi.utils import StatusFile
 
 
 class AutoBackup(plugins.Plugin):
@@ -42,8 +43,8 @@ class AutoBackup(plugins.Plugin):
         try:
             display = agent.view()
 
-            logging.info("[auto_backup] Backing up ...")
-            display.set('status', 'Backing up ...')
+            logging.info("[auto_backup] Backing up...")
+            display.set('status', 'Backing up...')
             display.update()
 
             for cmd in self.options['commands']:

@@ -1,11 +1,13 @@
-import os
 import logging
-from pwnagotchi.voice import Voice
-import pwnagotchi.plugins as plugins
+import os
+
 try:
     from mastodon import Mastodon
 except ImportError:
-    logging.error('Could not import mastodon')
+    logging.error('[mastodon] Could not import python library.')
+
+from pwnagotchi.voice import Voice
+import pwnagotchi.plugins as plugins
 
 
 class MastodonStatus(plugins.Plugin):
@@ -15,7 +17,7 @@ class MastodonStatus(plugins.Plugin):
     __description__ = 'Periodically post status updates. Based on twitter plugin by evilsocket'
 
     def on_loaded(self):
-        logging.info("mastodon plugin loaded.")
+        logging.info("[mastodon] Plugin loaded.")
 
     # Called when there's available internet
     def on_internet_available(self, agent):
@@ -30,7 +32,7 @@ class MastodonStatus(plugins.Plugin):
         user_cred = '/root/.mastodon.user.secret'
 
         if last_session.is_new() and last_session.handshakes > 0:
-            logging.info("Detected internet and new activity: time to post!")
+            logging.info("[mastodon] Detected internet and new activity: time to post!")
 
             if not os.path.isfile(user_cred) or not os.path.isfile(client_cred):
                 # Runs only if there are any missing credential files
@@ -45,7 +47,7 @@ class MastodonStatus(plugins.Plugin):
             display.update(force=True)
 
             try:
-                logging.info('Connecting to Mastodon API')
+                logging.info('[mastodon] Connecting to Mastodon API...')
                 mastodon = Mastodon(
                     client_id=client_cred,
                     api_base_url=api_base_url
@@ -67,8 +69,8 @@ class MastodonStatus(plugins.Plugin):
                 )
 
                 last_session.save_session_id()
-                logging.info("posted: %s" % message)
+                logging.info(f"[mastodon] Posted: {message}")
                 display.set('status', 'Posted!')
                 display.update(force=True)
-            except Exception:
-                logging.exception("error while posting")
+            except Exception as e:
+                logging.exception(f"[mastodon] Error while posting: {e}")

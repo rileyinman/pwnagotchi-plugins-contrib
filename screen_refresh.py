@@ -1,4 +1,5 @@
 import logging
+
 import pwnagotchi.plugins as plugins
 
 
@@ -9,19 +10,19 @@ class ScreenRefresh(plugins.Plugin):
     __description__ = 'Refresh he e-ink display after X amount of updates'
 
     def __init__(self):
-        self.update_count = 0;
+        self.update_count = 0
 
     def on_loaded(self):
         if 'refresh_interval' in self.options:
             self.refresh_interval = self.options['refresh_interval']
         else:
             self.refresh_interval = 50
-        logging.info("Screen refresh plugin loaded")
+        logging.info("[screen_refresh] Plugin loaded.")
 
     def on_ui_update(self, ui):
         self.update_count += 1
         if self.update_count == self.refresh_interval:
             ui.init_display()
-            ui.set('status', "Screen cleaned")
-            logging.info("Screen refreshing")
+            ui.set('status', "Screen cleared.")
+            logging.info("[screen_refresh] Refreshing...")
             self.update_count = 0

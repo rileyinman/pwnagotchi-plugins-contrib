@@ -1,11 +1,10 @@
+import datetime
+import logging
+
 from pwnagotchi.ui.components import LabeledValue
 from pwnagotchi.ui.view import BLACK
 import pwnagotchi.ui.fonts as fonts
 import pwnagotchi.plugins as plugins
-import pwnagotchi
-import logging
-import datetime
-import math
 
 
 class Christmas(plugins.Plugin):
@@ -20,7 +19,7 @@ class Christmas(plugins.Plugin):
     def on_config_changed(self, config):
         self.config = config
 
-    def on_ready(self, agent)
+    def on_ready(self, agent):
         self.config = agent.config()
 
     def on_ui_setup(self, ui):
@@ -53,6 +52,6 @@ class Christmas(plugins.Plugin):
         if now.month == 12 and now.day == 25:
             ui.set('christmas', "Merry\nChristmas!")
         elif days == 0:
-            ui.set('christmas', "Christmas\n%dH %dM" % (hours, minutes))
+            ui.set('christmas', f"Christmas\n{hours}H {minutes}M")
         else:
-            ui.set('christmas', "Christmas\n%dD %dH" % (days, hours))
+            ui.set('christmas', f"Christmas\n{days}D {hours}H")

@@ -1,9 +1,8 @@
 import logging
+import os
+
 from pwnagotchi.voice import Voice
 import pwnagotchi.plugins as plugins
-import os
-import requests
-import subprocess
 
 
 class Discord(plugins.Plugin):
@@ -53,9 +52,7 @@ class Discord(plugins.Plugin):
 
             logging.info("[discord] detected new activity and internet, time to send a message!")
 
-            picture =
-                '/var/tmp/pwnagotchi/pwnagotchi.png' if os.path.exists("/var/tmp/pwnagotchi/pwnagotchi.png")
-                else '/root/pwnagotchi.png'
+            picture = '/var/tmp/pwnagotchi/pwnagotchi.png' if os.path.exists("/var/tmp/pwnagotchi/pwnagotchi.png") else '/root/pwnagotchi.png'
             display.on_manual_mode(last_session)
             display.image().save(picture, 'png')
             display.update(force=True)

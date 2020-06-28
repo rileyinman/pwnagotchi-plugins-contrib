@@ -1,7 +1,8 @@
 import logging
+import os
+
 from pwnagotchi.voice import Voice
 import pwnagotchi.plugins as plugins
-import os
 
 
 class Telegram(plugins.Plugin):
@@ -18,7 +19,7 @@ class Telegram(plugins.Plugin):
             import telegram
         except ImportError as e:
             logging.error("[telegram] Couldn't import python library.")
-            logging.debug(e);
+            logging.debug(e)
             return
 
         if 'bot_token' not in self.options or not self.options['bot_token']:
@@ -49,14 +50,12 @@ class Telegram(plugins.Plugin):
                 import telegram
             except ImportError as e:
                 logging.error("[telegram] Couldn't import python library.")
-                logging.debug(e);
+                logging.debug(e)
                 return
 
             logging.info("[telegram] Detected new activity and internet, time to send a message!")
 
-            picture =
-                '/var/tmp/pwnagotchi/pwnagotchi.png' if os.path.exists("/var/tmp/pwnagotchi/pwnagotchi.png")
-                else '/root/pwnagotchi.png'
+            picture = '/var/tmp/pwnagotchi/pwnagotchi.png' if os.path.exists("/var/tmp/pwnagotchi/pwnagotchi.png") else '/root/pwnagotchi.png'
             display.on_manual_mode(last_session)
             display.image().save(picture, 'png')
             display.update(force=True)

@@ -1,15 +1,14 @@
 import logging
-import subprocess
-import string
 import re
+import string
+import subprocess
+
 import pwnagotchi.plugins as plugins
 
-'''
-Aircrack-ng needed, to install:
-> apt-get install aircrack-ng
-Upload wordlist files in .txt format to folder in config file (Default: /opt/wordlists/)
-Cracked handshakes stored in handshake folder as [essid].pcap.cracked
-'''
+# Aircrack-ng needed, to install:
+# > apt-get install aircrack-ng
+# Upload wordlist files in .txt format to folder in config file (Default: /opt/wordlists/)
+# Cracked handshakes stored in handshake folder as [essid].pcap.cracked
 
 
 class QuickDic(plugins.Plugin):
@@ -46,9 +45,9 @@ class QuickDic(plugins.Plugin):
             logging.info("[quickdic] Handshake confirmed")
             result2 = subprocess.run(('aircrack-ng -w `echo ' + self.options[
                 'wordlist_folder'] + '*.txt | sed \'s/\ /,/g\'` -l ' + filename + '.cracked -q -b ' + result + ' ' + filename + ' | grep KEY'),
-                shell=True, stdout=subprocess.PIPE)
+                                     shell=True, stdout=subprocess.PIPE)
             result2 = result2.stdout.decode('utf-8').strip()
-            logging.info("[quickdic] " + result2)
+            logging.info(f"[quickdic] {result2}")
             if result2 != "KEY NOT FOUND":
                 key = re.search('\[(.*)\]', result2)
                 pwd = str(key.group(1))
