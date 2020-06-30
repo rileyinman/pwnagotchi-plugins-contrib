@@ -80,5 +80,7 @@ class Telegram(plugins.Plugin):
                 display.set('status', 'Telegram notification sent!')
                 display.update(force=True)
             except Exception as e:
-                logging.exception("[telegram] Error while sending message.")
-                logging.debug(e)
+                logging.exception(f"[telegram] An error occurred in the Telegram plugin: {e}")
+                display.set('face', faces.BROKEN)
+                display.set('status', 'An error occured in the Telegram plugin.')
+                display.update(force=True)
